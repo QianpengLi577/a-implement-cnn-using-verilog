@@ -1,0 +1,35 @@
+module cnn(clk,rst,data,data_w,result);
+input clk;
+input rst;
+input [32-1 :0]data;
+input [32*9 -1 :0]data_w;
+output [32-1:0] result;
+
+wire [32*9 -1 :0]data_kernel;
+wire mul_en;
+get_data g1(clk,rst,data,data_kernel,mul_en);
+
+wire [31:0] mul1,mul2,mul3,mul4,mul5,mul6,mul7,mul8,mul9;
+wire [31:0] add1,add2,add3,add4,add5,add6,add7,add8;
+assign result = add8;
+
+mul m1(.clk(clk),.rst(rst),.flout_a(data_kernel[31:0]),.flout_b(data_w[31:0]),.flout_c(mul1),.round_cfg(0),.en(mul_en));
+mul m2(.clk(clk),.rst(rst),.flout_a(data_kernel[63:32]),.flout_b(data_w[63:32]),.flout_c(mul2),.round_cfg(0),.en(mul_en));
+mul m3(.clk(clk),.rst(rst),.flout_a(data_kernel[95:64]),.flout_b(data_w[95:64]),.flout_c(mul3),.round_cfg(0),.en(mul_en));
+mul m4(.clk(clk),.rst(rst),.flout_a(data_kernel[127:96]),.flout_b(data_w[127:96]),.flout_c(mul4),.round_cfg(0),.en(mul_en));
+mul m5(.clk(clk),.rst(rst),.flout_a(data_kernel[159:128]),.flout_b(data_w[159:128]),.flout_c(mul5),.round_cfg(0),.en(mul_en));
+mul m6(.clk(clk),.rst(rst),.flout_a(data_kernel[191:160]),.flout_b(data_w[191:160]),.flout_c(mul6),.round_cfg(0),.en(mul_en));
+mul m7(.clk(clk),.rst(rst),.flout_a(data_kernel[223:192]),.flout_b(data_w[223:192]),.flout_c(mul7),.round_cfg(0),.en(mul_en));
+mul m8(.clk(clk),.rst(rst),.flout_a(data_kernel[255:224]),.flout_b(data_w[255:224]),.flout_c(mul8),.round_cfg(0),.en(mul_en));
+mul m9(.clk(clk),.rst(rst),.flout_a(data_kernel[287:256]),.flout_b(data_w[287:256]),.flout_c(mul9),.round_cfg(0),.en(mul_en));
+
+add add11(.MAIN_CLK(clk),.a(mul1),.b(mul2),.ab(add1));
+add add12(.MAIN_CLK(clk),.a(add1),.b(mul3),.ab(add2));
+add add13(.MAIN_CLK(clk),.a(mul4),.b(mul5),.ab(add3));
+add add14(.MAIN_CLK(clk),.a(add3),.b(mul6),.ab(add4));
+add add15(.MAIN_CLK(clk),.a(mul7),.b(mul8),.ab(add5));
+add add16(.MAIN_CLK(clk),.a(add5),.b(mul9),.ab(add6));
+add add17(.MAIN_CLK(clk),.a(add2),.b(add4),.ab(add7));
+add add18(.MAIN_CLK(clk),.a(add6),.b(add7),.ab(add8));
+
+endmodule

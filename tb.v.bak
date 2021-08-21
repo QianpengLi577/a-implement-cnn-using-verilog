@@ -1,0 +1,42 @@
+`timescale 1ns/1ns
+module tb;
+
+reg clk;
+reg rst;
+wire [31:0] data;
+wire [32*9 -1 :0]data_w;
+wire [31:0] result;
+reg [31:0] rnd1mem [0:999];
+reg [10:0] addr;
+
+initial clk = 0;
+
+always #1 clk = ~clk;
+initial 
+begin 
+# 3000 $stop;
+end
+initial begin
+$readmemh("E:/CASIA/SNN_RL-co/code_part/generate_mul_data/rnd1hex.txt",rnd1mem);
+addr = 0;
+$dumpfile("tb.vcd");
+$dumpvars(0,tb);
+end
+
+always @ (posedge clk)
+begin 
+	addr = addr + 1;
+end
+assign data = rnd1mem[addr-1];
+assign data_w[31:0]=32'h3FA00000;
+assign data_w[63:32]=32'h3FA00000;
+assign data_w[95:64]=32'h3FA00000;
+assign data_w[127:96]=32'h3FA00000;
+assign data_w[159:128]=32'h3FA00000;
+assign data_w[191:160]=32'h3FA00000;
+assign data_w[223:192]=32'h3FA00000;
+assign data_w[255:224]=32'h3FA00000;
+assign data_w[287:256]=32'h3FA00000;
+cnn c1(clk,rst,data,data_w,result);
+
+endmodule 
